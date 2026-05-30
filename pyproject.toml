@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "photo-ingest-agent"
+version = "0.1.0"
+description = "Local macOS photo ingest and culling assistant for Lightroom workflows."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "Pillow>=10.0.0",
+  "opencv-python-headless>=4.8.0",
+]
+
+[project.optional-dependencies]
+raw = ["rawpy>=0.21.0"]
+dev = ["pytest>=8.0.0"]
+
+[project.scripts]
+photo-agent = "photo_ingest_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["photo_ingest_agent*"]
