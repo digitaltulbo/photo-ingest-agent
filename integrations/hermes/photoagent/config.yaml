@@ -1,0 +1,17 @@
+model:
+  default: gpt-5-mini
+  provider: copilot
+  base_url: https://api.githubcopilot.com
+  api_mode: chat_completions
+toolsets:
+- hermes-cli
+agent:
+  max_turns: 20
+  gateway_timeout: 1800
+display:
+  reasoning: false
+  background_process_notifications: result
+terminal:
+  backend: local
+  cwd: /Users/jinito/Workspaces/photo-ingest-agent
+  timeout: 1800

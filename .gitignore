@@ -1,6 +1,7 @@
-.venv/
+.DS_Store
 __pycache__/
 *.pyc
+.venv/
 *.egg-info/
+tests/sample_source/
 tests/output/
-tests/sample_source/*.jpg
