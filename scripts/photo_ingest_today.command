@@ -64,7 +64,8 @@ if [ -z "$LOCATION" ]; then LOCATION="미지정"; fi
 if [ -z "$CAMERA" ]; then CAMERA="수동 입력 예정"; fi
 if [ -z "$LENS" ]; then LENS="수동 입력 예정"; fi
 
-show_message "선택한 날짜($SHOOT_DATE)의 사진만 실제로 가져오고 컬링까지 진행합니다.\n\n원본: $SOURCE\n저장 위치: $DEST\n촬영명: $TITLE\n장소: $LOCATION\n카메라: $CAMERA\n렌즈: $LENS"
+show_message "선택한 날짜($SHOOT_DATE)의 사진만 실제로 가져오고 JPG를 Lightroom Auto Import 폴더로 전달합니다.\n\n원본: $SOURCE\n저장 위치: $DEST\n촬영명: $TITLE\n장소: $LOCATION\n카메라: $CAMERA\n렌즈: $LENS"
+LIGHTROOM_WATCHED="/Volumes/980PRO/LightroomAutoImport/watched"
 
 photo-agent ingest \
   --source "$SOURCE" \
@@ -76,8 +77,9 @@ photo-agent ingest \
   --date "$SHOOT_DATE" \
   --only-date "$SHOOT_DATE" \
   --execute \
-  --run-cull \
+  --stage-lightroom-jpg \
+  --lightroom-watched-dir "$LIGHTROOM_WATCHED" \
   --open-finder \
   --plan-limit 20
 
-show_message "완료했습니다. 생성된 촬영 폴더가 Finder에서 열렸습니다."
+show_message "완료했습니다.\n\nRAW/JPG 정리와 촬영 노트를 만들고, JPG를 Lightroom Auto Import 폴더로 전달했습니다.\n\nLightroom watched folder:\n$LIGHTROOM_WATCHED"
