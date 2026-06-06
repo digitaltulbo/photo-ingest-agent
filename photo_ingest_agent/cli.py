@@ -40,6 +40,8 @@ SHOOT_DIRS = [
 ]
 
 DEFAULT_LIGHTROOM_WATCHED_DIR = Path("/Volumes/980PRO/LightroomAutoImport/watched")
+DEFAULT_LIGHTROOM_DEST_DIR = Path("/Volumes/980PRO/Photos/LightroomAutoImported")
+DEFAULT_LIGHTROOM_COLLECTION = "Photo Agent Auto Import"
 
 
 @dataclass(frozen=True)
@@ -362,13 +364,26 @@ def make_lightroom_note(watched_dir: Path) -> str:
 
 `{watched_dir}`
 
-4. Auto Import를 켭니다.
+4. Move to를 아래 경로로 지정합니다.
+
+`{DEFAULT_LIGHTROOM_DEST_DIR}`
+
+5. Subfolder Name을 아래 값으로 지정합니다.
+
+`JPG_From_Photo_Agent`
+
+6. Add to Collection을 켜고 아래 collection을 만들거나 선택합니다.
+
+`{DEFAULT_LIGHTROOM_COLLECTION}`
+
+7. Auto Import를 켭니다.
 
 ## 현재 MVP 원칙
 - Lightroom에는 JPG만 자동으로 넘깁니다.
 - RAW 원본은 `01_RAW`에 보관하고, 나중에 사람이 필요할 때 Lightroom에서 직접 확인합니다.
 - Watched Folder는 임시 입구입니다. 실제 원본 보관소가 아닙니다.
 - Lightroom이 가져간 뒤 watched 폴더가 비워지는 것은 정상 동작입니다.
+- iPad에서 보려면 Lightroom Classic의 `{DEFAULT_LIGHTROOM_COLLECTION}` collection sync를 켭니다.
 """
 
 
@@ -493,7 +508,7 @@ def run_lightroom_stage(args: argparse.Namespace) -> int:
     watched_dir.mkdir(parents=True, exist_ok=True) if args.execute else None
     stage_record_dir = shoot_dir / "03_LIGHTROOM_AUTO_IMPORT"
     stage_record_dir.mkdir(parents=True, exist_ok=True) if args.execute else None
-    plan = [resolve_stage_destination(watched_dir, path) for path in sorted(jpg_dir.iterdir()) if is_jpg_file(path)]
+    plan = [resolve_stage_destination(watched_dir, path, shoot_dir.name) for path in sorted(jpg_dir.iterdir()) if is_jpg_file(path)]
 
     print(f"Mode: {'EXECUTE' if args.execute else 'DRY-RUN'}")
     print(f"Shoot folder: {shoot_dir}")
@@ -519,8 +534,9 @@ def run_lightroom_stage(args: argparse.Namespace) -> int:
     return 0
 
 
-def resolve_stage_destination(watched_dir: Path, source: Path) -> CopyPlanItem:
-    target = watched_dir / source.name
+def resolve_stage_destination(watched_dir: Path, source: Path, shoot_name: str) -> CopyPlanItem:
+    safe_shoot = slugify(shoot_name)
+    target = watched_dir / f"{safe_shoot}__{source.name}"
     if not target.exists():
         return CopyPlanItem(source, target, "copy")
     if target.stat().st_size == source.stat().st_size and sha256_file(target) == sha256_file(source):

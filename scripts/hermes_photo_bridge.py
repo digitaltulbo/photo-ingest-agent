@@ -14,6 +14,8 @@ from pathlib import Path
 PROJECT_DIR = Path("/Users/jinito/Workspaces/photo-ingest-agent")
 DEFAULT_DEST = Path("/Volumes/980PRO/Photos")
 DEFAULT_LIGHTROOM_WATCHED_DIR = Path("/Volumes/980PRO/LightroomAutoImport/watched")
+DEFAULT_LIGHTROOM_DEST_DIR = Path("/Volumes/980PRO/Photos/LightroomAutoImported")
+DEFAULT_LIGHTROOM_COLLECTION = "Photo Agent Auto Import"
 DEFAULT_SOURCE_CANDIDATES = [
     Path("/Volumes/Untitled/DCIM"),
     Path("/Volumes/UNTITLED/DCIM"),
@@ -93,6 +95,20 @@ def run_command(command: list[str]) -> subprocess.CompletedProcess[str]:
         stderr=subprocess.STDOUT,
         check=False,
     )
+
+
+def setup_lightroom_dirs(args: argparse.Namespace) -> int:
+    watched_dir = Path(args.watched_dir).expanduser().resolve()
+    dest_dir = Path(args.lightroom_dest).expanduser().resolve()
+    watched_dir.mkdir(parents=True, exist_ok=True)
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    print("Lightroom Auto Import 폴더 준비 완료")
+    print(f"- Watched Folder: {watched_dir}")
+    print(f"- Move to: {dest_dir}")
+    print("- Subfolder Name: JPG_From_Photo_Agent")
+    print(f"- Collection: {args.collection}")
+    print("- iPad 확인: Lightroom Classic에서 이 collection의 Sync를 켜세요.")
+    return 0
 
 
 def parse_shoot_folder(output: str) -> str:
@@ -243,6 +259,12 @@ def stage_lightroom_latest(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Hermes bridge for photo-ingest-agent.")
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    setup = subparsers.add_parser("setup-lightroom", help="Create 980PRO folders for Lightroom Classic Auto Import.")
+    setup.add_argument("--watched-dir", default=str(DEFAULT_LIGHTROOM_WATCHED_DIR), help="Lightroom Classic Auto Import watched folder.")
+    setup.add_argument("--lightroom-dest", default=str(DEFAULT_LIGHTROOM_DEST_DIR), help="Lightroom Classic Auto Import destination folder.")
+    setup.add_argument("--collection", default=DEFAULT_LIGHTROOM_COLLECTION, help="Recommended Lightroom collection name.")
+    setup.set_defaults(func=setup_lightroom_dirs)
 
     latest = subparsers.add_parser("ingest-latest", help="Ingest the latest date found on the memory card and stage JPG for Lightroom.")
     latest.add_argument("--source", default="", help="Source folder. Defaults to the first memory-card DCIM folder.")

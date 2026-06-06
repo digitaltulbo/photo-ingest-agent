@@ -50,7 +50,7 @@ Telegram에서 photoagent에게 이렇게 말합니다.
 
 Lightroom Classic에서 Auto Import가 켜져 있으면, 이 watched folder에 들어온 JPG를 자동으로 가져갑니다.
 
-## Lightroom Classic 설정
+## Lightroom Classic Auto Import 설정
 
 Lightroom Classic에서 한 번만 설정합니다.
 
@@ -62,10 +62,31 @@ Lightroom Classic에서 한 번만 설정합니다.
 /Volumes/980PRO/LightroomAutoImport/watched
 ```
 
-4. Destination은 Lightroom이 가져간 JPG를 둘 위치로 지정합니다.
-5. `Enable Auto Import`를 켭니다.
+4. Move to:
+
+```text
+/Volumes/980PRO/Photos/LightroomAutoImported
+```
+
+5. Subfolder Name:
+
+```text
+JPG_From_Photo_Agent
+```
+
+6. Add to Collection을 켜고 collection을 만듭니다.
+
+```text
+Photo Agent Auto Import
+```
+
+7. Initial Previews는 `Minimal`로 둡니다.
+8. `Enable Auto Import`를 켭니다.
+9. Lightroom Classic 왼쪽 Collections 패널에서 `Photo Agent Auto Import` collection의 sync를 켭니다.
 
 이 MVP에서는 Lightroom에 JPG만 자동 전달합니다. RAW는 `01_RAW`에 안전하게 보관하고, 사람이 필요할 때 Mac에서 직접 가져와 확인합니다.
+
+중요: watched folder는 임시 입구입니다. Lightroom이 가져간 뒤 watched folder에서 파일이 사라지는 것은 정상입니다. Lightroom이 가져간 JPG는 980PRO의 `Photos/LightroomAutoImported/JPG_From_Photo_Agent` 아래에 저장됩니다.
 
 ## Hermes 명령
 
@@ -84,6 +105,13 @@ Lightroom Classic에서 한 번만 설정합니다.
 ```
 
 - 이미 가져온 최신 촬영 폴더의 `02_JPG` 파일을 Lightroom watched folder로 다시 전달합니다.
+
+```text
+라이트룸 설정 준비해줘
+```
+
+- 980PRO에 Lightroom Auto Import용 폴더를 만듭니다.
+- Lightroom Classic 화면에서 넣어야 할 Watched Folder, Move to, Collection 이름을 알려줍니다.
 
 ```text
 상태 알려줘
@@ -143,6 +171,7 @@ photo-agent lightroom-stage \
 - RAW와 JPG 분리
 - Lightroom에는 JPG만 자동 전달
 - Auto Import watched folder는 임시 입구로만 사용
+- Lightroom에 넘기는 JPG 파일명에는 촬영 폴더명을 prefix로 붙여 `IMG_0001.JPG` 중복 충돌을 줄임
 - 촬영 노트는 사람이 나중에 더 적기 좋은 구조로 생성
 - Hermes는 자연어 명령을 실제 로컬 액션으로 연결
 

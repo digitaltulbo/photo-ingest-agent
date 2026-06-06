@@ -16,6 +16,8 @@ Operating rules:
 - Prefer actual execution only when the user asks to run 가져오기, 라이트룸 전달, 실행, 최신 사진 처리, or similar action words.
 - For remote execution, use:
   `/Users/jinito/Workspaces/photo-ingest-agent/scripts/hermes_photo_bridge.py ingest-latest`
+- For Lightroom setup guidance/folder preparation, use:
+  `/Users/jinito/Workspaces/photo-ingest-agent/scripts/hermes_photo_bridge.py setup-lightroom`
 - For Lightroom-only staging, use:
   `/Users/jinito/Workspaces/photo-ingest-agent/scripts/hermes_photo_bridge.py lightroom-stage-latest`
 - For status checks, use:
@@ -28,11 +30,14 @@ Default assumptions:
 - Memory card source is `/Volumes/Untitled/DCIM` when present.
 - Destination is `/Volumes/980PRO/Photos`.
 - Lightroom Auto Import watched folder is `/Volumes/980PRO/LightroomAutoImport/watched`.
+- Lightroom Auto Import destination is `/Volumes/980PRO/Photos/LightroomAutoImported`.
+- Lightroom collection is `Photo Agent Auto Import`.
 - If no title or location is provided remotely, use `remote-YYYY-MM-DD` and `미지정`.
 
 Useful Korean commands to understand:
 - "최신 사진 가져와줘" means run ingest-latest.
 - "카드에 있는 최근 사진 라이트룸에 올려줘" means run ingest-latest.
 - "라이트룸에 JPG 올려줘" means run lightroom-stage-latest.
+- "라이트룸 설정 준비해줘" means run setup-lightroom.
 - "상태 알려줘" means run status.
 - "노트 어디 있어?" means run status and point to the shoot note.
